@@ -1,37 +1,44 @@
-// List of valid usernames and passwords
-const credentials = {
-    'Auld_D3n': 'PssAdmin01',
-    'febdem123': 'PssAdmin02',
-    'aiden_ju': 'PssAdmin03'
-};
+// script.js
+document.getElementById("invoiceForm").addEventListener("submit", function(event) {
+  event.preventDefault();
 
-// Fallback password
-const fallbackPassword = 'Pssmyanmar';
+  // Get values from the form fields
+  const date = document.getElementById("date").value;
+  const username = document.getElementById("username").value;
+  const usermail = document.getElementById("usermail").value;
+  const endDate = document.getElementById("endDate").value;
+  const invoiceId = document.getElementById("invoiceId").value;
+  const paymentMethod = document.getElementById("paymentMethod").value;
+  const paidAmount = document.getElementById("paidAmount").value;
+  const issuer = document.getElementById("issuer").value;
+  const note = document.getElementById("note").value;
 
-// Form event listener
-document.getElementById('loginForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    
-    // Get the input values
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('errorMessage');
-    
-    // Reset error message
-    errorMessage.textContent = '';
-    
-    // Check if the username exists in the credentials
-    if (credentials.hasOwnProperty(username)) {
-        // Check if the password is correct or fallback password is used
-        if (credentials[username] === password || password === fallbackPassword) {
-            // Successful login
-            window.location.href = 'invoiceGenerator.html'; // Redirect to the invoice generator page
-        } else {
-            // Invalid password
-            errorMessage.textContent = 'Incorrect password!';
-        }
-    } else {
-        // Invalid username
-        errorMessage.textContent = 'Username not found!';
-    }
+  // Fill the template with user input
+  const invoiceTemplate = `
+    <div class="invoice">
+      <h1>PSS</h1>
+      <p>https://t.me/pssmyanmar</p>
+      <div class="details">
+        <p>Date: ${date}</p>
+        <p>Username: ${username}</p>
+        <p>Usermail: ${usermail}</p>
+        <p>End Date: ${endDate}</p>
+        <p>Invoice ID: ${invoiceId}</p>
+        <p>Payment Method: ${paymentMethod}</p>
+        <p>Paid Amount: ${paidAmount} MMK</p>
+        <p>Issuer: ${issuer}</p>
+        <p>Note: ${note}</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("output").innerHTML = invoiceTemplate;
+
+  // Use html2canvas to capture the output as a downloadable JPG
+  html2canvas(document.querySelector("#output")).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "invoice.jpg";
+    link.href = canvas.toDataURL("image/jpeg");
+    link.click();
+  });
 });
